@@ -3,14 +3,15 @@
     <v-toolbar fixed app>
       <v-toolbar-title>Street View Downloader</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-text-field v-model="npoints" class="ml-2" flat hide-details label="No points"></v-text-field>
-      <v-text-field v-model="nangles" class="ml-2" flat hide-details label="No angles per point"></v-text-field>
-      <v-select v-model="pitch" :items="pitch_values" class="ml-2" flat hide-details multiple label="Pitch values" style="width: 200px"></v-select>
-      <v-text-field class="ml-2" flat hide-details readonly v-model="total_points" label="Total requests"></v-text-field>
-      <v-btn class="ml-2" color="success">Download</v-btn>
+      <v-text-field v-model="name" class="ml-2" flat hide-details label="Collection name"></v-text-field>
+      <v-text-field v-model.number="npoints" class="ml-2" flat hide-details label="No points"></v-text-field>
+      <v-text-field v-model.number="nheadings" class="ml-2" flat hide-details label="No headings per point"></v-text-field>
+      <v-select v-model.number="pitches" :items="pitch_values" class="ml-2" flat hide-details multiple label="Pitch values" style="width: 200px"></v-select>
+      <v-text-field v-model.number="total_points" class="ml-2" flat hide-details readonly label="Total requests"></v-text-field>
+      <v-btn @click="download" class="ml-2" color="success" :disabled="!name">Download</v-btn>
     </v-toolbar>
     <v-content>
-      <v-container>
+      <v-container fluid fill-height class="pa-0">
         <nuxt />
       </v-container>
     </v-content>
@@ -18,29 +19,38 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
+  const URL = 'http://localhost:8090'
+
   export default {
-    data () {
-      return {
-      }
-    },
     computed: {
+      name: {
+        get () { return this.$store.state.name },
+        set (value) { this.$store.commit('updateName', value) }
+      },
       npoints: {
         get () { return this.$store.state.npoints },
         set (value) { this.$store.commit('updateNpoints', value) }
       },
-      nangles: {
-        get () { return this.$store.state.nangles },
-        set (value) { this.$store.commit('updateNangles', value) }
+      nheadings: {
+        get () { return this.$store.state.nheadings },
+        set (value) { this.$store.commit('updateNheadings', value) }
       },
-      pitch: {
-        get () { return this.$store.state.pitch },
-        set (value) { this.$store.commit('updatePitch', value) }
+      pitches: {
+        get () { return this.$store.state.pitches },
+        set (value) { this.$store.commit('updatePitches', value) }
       },
-      pitch_values: function () {
+      pitch_values () {
         return this.$store.state.pitch_values
       },
-      total_points: function () {
-        return this.$store.state.npoints * this.$store.state.nangles * this.$store.state.pitch.length
+      total_points () {
+        return this.$store.state.npoints * this.$store.state.nheadings * this.$store.state.pitches.length
+      }
+    },
+    methods: {
+      download () {
+        axios.get(`${URL}/api`, { params: this.$store.state })
       }
     }
   }
