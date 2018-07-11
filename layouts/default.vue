@@ -15,6 +15,7 @@
         <nuxt />
       </v-container>
     </v-content>
+    <v-snackbar v-model="snackbar" top right :timeout="2000">Downloading...</v-snackbar>
   </v-app>
 </template>
 
@@ -24,6 +25,11 @@
   const URL = 'http://localhost:8090'
 
   export default {
+    data () {
+      return {
+        snackbar: false
+      }
+    },
     computed: {
       name: {
         get () { return this.$store.state.name },
@@ -50,6 +56,7 @@
     },
     methods: {
       download () {
+        this.snackbar = true
         axios.get(`${URL}/api`, { params: this.$store.state })
       }
     }
