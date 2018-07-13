@@ -6,7 +6,7 @@
       <v-text-field v-model="name" class="ml-2" flat hide-details label="Collection name"></v-text-field>
       <v-text-field v-model.number="npoints" class="ml-2" flat hide-details label="No points"></v-text-field>
       <v-text-field v-model.number="nheadings" class="ml-2" flat hide-details label="No headings per point"></v-text-field>
-      <v-select v-model.number="pitches" :items="pitch_values" class="ml-2" flat hide-details multiple label="Pitch values" style="width: 200px"></v-select>
+      <v-select v-model="pitches" :items="pitch_values" class="ml-2" flat hide-details multiple label="Pitch values" style="width: 200px"></v-select>
       <v-text-field v-model.number="total_points" class="ml-2" flat hide-details readonly label="Total requests"></v-text-field>
       <v-btn @click="download" class="ml-2" color="success" :disabled="!name">Download</v-btn>
     </v-toolbar>
